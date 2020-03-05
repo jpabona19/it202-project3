@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<style>
+		canvas{
+			background: #2CBFF7;
+		}
+	
+	</style>
+	</head>	
+	
+	<body>
+		<canvas id="c1" width="500" height="500"></canvas>
+		
+			<script>
+				let canvasWidth = 500;
+				let canvasHeight = 500;
+				
+				let playerImage = new Image();
+				playerImage.src = 'https://image.shutterstock.com/image-vector/gold-fish-pixel-icon-art-600w-1060161041.jpg';
+				let player = {x: 100, y: 200, radius: 50, img: playerImage};
+
+				let harm = {x: 200, y: 200, radius: 30};
+				let benefit = {x: 200, y: 200, radius: 30};
+				let game = {score: 0, lives: 3, level: 1};
+				let downKey = false;
+				let upKey = false;
+
+				let c = document.querySelector("#c1");
+				let ctx = c.getContext("2d");
+
+				//handle keydown
+				const keyDown = (e) =>{
+					if(e.keyCode == 40){
+						downKey = true;
+					}
+					else if(e.keyCode == 38){
+						upKey = true;
+					}
+					
+				}
+				
+				//handle keyup
+				const keyUp = (e) =>{
+					if(e.keyCode == 40){
+						downKey = false;
+					}
+					else if(e.keyCode == 38){
+						upKey = false;
+					}
+				}
+				
+				const collisionPlayerHarm = () =>{
+					let deltaX = harm["x"] - player["x"];
+					let deltaY = harm["y"] - player["y"];
+					let distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+					if(distance <= harm["radius"] + player["radius"]){
+						return true;
+					}
+					
+				}
+				
+				const collisionPlayerBenefit = () =>{
+					let deltaX = benefit["x"] - player["x"];
+					let deltaY = benefit["y"] - player["y"];
+					let distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+					if(distance <= benefit["radius"] + player["radius"]){
+						return true;
+					}
+					
+				}
+				
+
+				const draw = () => {
+					//clear
+					ctx.clearRect(0,0, c.width, c.height);
+
+					document.addEventListener('keydown', keyDown, false);
+					document.addEventListener('keyup', keyUp, false);
+					
+					//update values (player)
+					if(upKey){
+						player["y"] -= 5;
+					}
+					else if(downKey){
+						player["y"] += 5;
+					}
+					
+					
+					//update values (harm and benefit)
+					harm["x"] -=1;
+					benefit["x"] -= 1;
+
+
+					//edge for player
+					if(player["x"] > c.width + player["radius"]){
+						player["x"] = -player["radius"];
+					}
+
+
+					//edge condition for harm
+					//edge randomizer
+					if(harm["x"] < 0 - harm["radius"]){
+						harm["x"] = c.width;
+						harm["y"] = Math.floor(Math.random() * 450);
+					}
+
+					//edge condition for benefit
+					//edge randomizer
+					if(benefit["x"] < 0 - benefit["radius"]){
+						benefit["x"] = c.width;
+						benefit["y"] = Math.floor(Math.random() * 450);
+					}
+
+					//draw player
+					ctx.beginPath();
+					ctx.arc(player["x"], player["y"], player["radius"], 0, Math.PI*2);
+					ctx.closePath();
+					ctx.fillStyle = "yellow";
+					ctx.fill();
+
+					//draw harm
+					ctx.beginPath();
+					ctx.arc(harm["x"], harm["y"], harm["radius"], 0, Math.PI*2);
+					ctx.closePath();
+					ctx.fillStyle = "red";
+					ctx.fill();
+
+					//draw benefit
+					ctx.beginPath();
+					ctx.arc(benefit["x"], benefit["y"], benefit["radius"], 0, Math.PI*2);
+					ctx.closePath();
+					ctx.fillStyle = "green";
+					ctx.fill();
+					
+					//check collision between player and character
+					if(collisionPlayerHarm() == true){
+						harm["x"] = c.width;
+					}
+					
+					if(collisionPlayerBenefit() == true){
+						benefit["x"] = c.width;
+					}
+					
+
+					//repeat
+					window.requestAnimationFrame(draw);
+
+				}
+
+
+				draw();
+			</script>
+	</body>
+</html>
