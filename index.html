@@ -16,8 +16,8 @@
 				let canvasWidth = 900;
 				let canvasHeight = 550;
 				let player = {x: 50, y: 150, radius: 50};
-				let harm = {x: 200, y: 100, radius: 30};
-				let benefit = {x: 200, y: 100, radius: 30};
+				let harm = {x: 800, y: 100, radius: 30};
+				let benefit = {x: 800, y: 100, radius: 30};
 				let game = {score: 0, lives: 3, level: 1};
 				let downKey = false;
 				let upKey = false;
@@ -68,23 +68,8 @@
 					}
 					
 				}
-			
 				
-				
-				const instructions = () =>{
-					ctx.clearRect(0,0, c.width, c.height);
-					ctx.beginPath();
-					ctx.fillStyle = "black";
-					ctx.fillRect(100, 100, 700, 400);
-					ctx.font = "50px Arial";
-					ctx.fillStyle = "white";
-					ctx.fillText("Start", 150, 325);
-					ctx.stroke();
-					
-				}
-				
-				
-
+				//game loop
 				const draw = () => {
 					
 					//clear
@@ -232,7 +217,7 @@
 					
 				}
 
-				
+				//start screen with instructions
 				ctx.beginPath();
 				ctx.fillStyle = "black";
 				ctx.fillRect(100, 100, 700, 400);
@@ -240,7 +225,9 @@
 				ctx.fillStyle = "white";
 				ctx.fillText("START", 290, 325);
 				ctx.font = "30px Arial";
-				ctx.fillText("click on the screen to start", 275, 350);
+				ctx.fillText("press the up and down arrow keys", 225, 350);
+				ctx.fillText("avoid the shark and collect the coins", 215, 400);
+				ctx.fillText("click on the screen to start", 275, 450);
 				ctx.stroke();
 				
 				document.addEventListener('click', draw);
