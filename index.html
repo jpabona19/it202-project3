@@ -10,18 +10,14 @@
 	</head>	
 	
 	<body>
-		<canvas id="c1" width="500" height="500"></canvas>
+		<canvas id="c1" width="900" height="550"></canvas>
 		
 			<script>
-				let canvasWidth = 500;
-				let canvasHeight = 500;
-				
-				let playerImage = new Image();
-				playerImage.src = 'https://image.shutterstock.com/image-vector/gold-fish-pixel-icon-art-600w-1060161041.jpg';
-				let player = {x: 100, y: 200, radius: 50, img: playerImage};
-
-				let harm = {x: 200, y: 200, radius: 30};
-				let benefit = {x: 200, y: 200, radius: 30};
+				let canvasWidth = 900;
+				let canvasHeight = 550;
+				let player = {x: 50, y: 150, radius: 50};
+				let harm = {x: 200, y: 100, radius: 30};
+				let benefit = {x: 200, y: 100, radius: 30};
 				let game = {score: 0, lives: 3, level: 1};
 				let downKey = false;
 				let upKey = false;
@@ -50,6 +46,7 @@
 					}
 				}
 				
+				//checks collision between player and harm
 				const collisionPlayerHarm = () =>{
 					let deltaX = harm["x"] - player["x"];
 					let deltaY = harm["y"] - player["y"];
@@ -60,6 +57,7 @@
 					
 				}
 				
+				//checks collision between player and benefit
 				const collisionPlayerBenefit = () =>{
 					let deltaX = benefit["x"] - player["x"];
 					let deltaY = benefit["y"] - player["y"];
@@ -75,6 +73,8 @@
 					//clear
 					ctx.clearRect(0,0, c.width, c.height);
 
+					
+					//handles key up and key down
 					document.addEventListener('keydown', keyDown, false);
 					document.addEventListener('keyup', keyUp, false);
 					
@@ -88,8 +88,8 @@
 					
 					
 					//update values (harm and benefit)
-					harm["x"] -=1;
-					benefit["x"] -= 1;
+					harm["x"] -= 5;
+					benefit["x"] -= 5;
 
 
 					//edge for player
@@ -111,41 +111,96 @@
 						benefit["x"] = c.width;
 						benefit["y"] = Math.floor(Math.random() * 450);
 					}
-
+					
+					//draw background
+					let backgroundImg = new Image();
+					backgroundImg.src = "https://i.ytimg.com/vi/9EtULYJU_hg/maxresdefault.jpg";
+					ctx.drawImage(backgroundImg, 0, 0, backgroundImg.naturalWidth, backgroundImg.naturalHeight);
+					
+					//draw score/lives/level
+					ctx.beginPath();
+					//score
+					ctx.rect(0,0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Score: " + game["score"], 5, 30);
+					
+					//lives
+					ctx.rect(300, 0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Lives: " + game["lives"], 305, 30);
+					
+					//level
+					ctx.rect(600, 0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Level: " + game["level"], 605, 30);
+					
+					
+					ctx.stroke();
+					
+					
+					
+					
 					//draw player
 					ctx.beginPath();
-					ctx.arc(player["x"], player["y"], player["radius"], 0, Math.PI*2);
+					let imgP = new Image();
+					imgP.src = "https://img.icons8.com/officel/80/000000/fish.png";
+					ctx.drawImage(imgP, player["x"], player["y"], 100, 100);
 					ctx.closePath();
 					ctx.fillStyle = "yellow";
 					ctx.fill();
 
 					//draw harm
 					ctx.beginPath();
-					ctx.arc(harm["x"], harm["y"], harm["radius"], 0, Math.PI*2);
+					let imgH = new Image();
+					imgH.src = "https://img.icons8.com/emoji/96/000000/shark-emoji.png";
+					ctx.drawImage(imgH, harm["x"], harm["y"], 200, 200);
 					ctx.closePath();
 					ctx.fillStyle = "red";
-					ctx.fill();
-
+			
 					//draw benefit
 					ctx.beginPath();
-					ctx.arc(benefit["x"], benefit["y"], benefit["radius"], 0, Math.PI*2);
+					let imgB = new Image();
+					imgB.src = "https://img.icons8.com/dusk/64/000000/coins.png";
+					ctx.drawImage(imgB, benefit["x"], benefit["y"], 50, 50);
+					ctx.closePath();
 					ctx.closePath();
 					ctx.fillStyle = "green";
 					ctx.fill();
 					
-					//check collision between player and character
+					//handle collision between player and harm
 					if(collisionPlayerHarm() == true){
 						harm["x"] = c.width;
+						harm["y"] = Math.floor(Math.random() * 450);
+						game["lives"] -= 1;
+						console.log("lives: " + game["lives"]);
 					}
 					
+					//handle collision between player and benefit
 					if(collisionPlayerBenefit() == true){
 						benefit["x"] = c.width;
+						benefit["y"] = Math.floor(Math.random() * 450);
+						game["score"] += 10;
 					}
 					
-
+					
 					//repeat
-					window.requestAnimationFrame(draw);
-
+					if(game["lives"] > 0){
+						window.requestAnimationFrame(draw);
+					}
+					else{
+						window.cancelAnimationFrame(draw);
+						ctx.beginPath();
+						ctx.fillStyle = "red";
+						ctx.fillRect(100, 100, 700, 400);
+						ctx.stroke();
+						
+					}
+					
+					
+					//window.requestAnimationFrame(draw);
 				}
 
 
