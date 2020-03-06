@@ -21,6 +21,7 @@
 				let game = {score: 0, lives: 3, level: 1};
 				let downKey = false;
 				let upKey = false;
+				let startGame = false;
 
 				let c = document.querySelector("#c1");
 				let ctx = c.getContext("2d");
@@ -67,9 +68,25 @@
 					}
 					
 				}
+			
+				
+				
+				const instructions = () =>{
+					ctx.clearRect(0,0, c.width, c.height);
+					ctx.beginPath();
+					ctx.fillStyle = "black";
+					ctx.fillRect(100, 100, 700, 400);
+					ctx.font = "50px Arial";
+					ctx.fillStyle = "white";
+					ctx.fillText("Start", 150, 325);
+					ctx.stroke();
+					
+				}
+				
 				
 
 				const draw = () => {
+					
 					//clear
 					ctx.clearRect(0,0, c.width, c.height);
 
@@ -88,8 +105,21 @@
 					
 					
 					//update values (harm and benefit)
-					harm["x"] -= 5;
-					benefit["x"] -= 5;
+					if(game["score"] < 50){
+						harm["x"] -= 5;
+						benefit["x"] -= 5;
+					}
+					else if(game["score"] >= 50 && game["score"] < 100){
+						harm["x"] -= 7;
+						benefit["x"] -= 7;
+						game["level"] = 2;
+					}
+					else if(game["score"] >= 100){
+						harm["x"] -= 10;
+						benefit["x"] -= 10;
+						game["level"] = 3;
+					}
+					
 
 
 					//edge for player
@@ -117,32 +147,7 @@
 					backgroundImg.src = "https://i.ytimg.com/vi/9EtULYJU_hg/maxresdefault.jpg";
 					ctx.drawImage(backgroundImg, 0, 0, backgroundImg.naturalWidth, backgroundImg.naturalHeight);
 					
-					//draw score/lives/level
-					ctx.beginPath();
-					//score
-					ctx.rect(0,0, 300, 50);
-					ctx.font = "30px Arial";
-					ctx.fillStyle = "black";
-					ctx.fillText("Score: " + game["score"], 5, 30);
-					
-					//lives
-					ctx.rect(300, 0, 300, 50);
-					ctx.font = "30px Arial";
-					ctx.fillStyle = "black";
-					ctx.fillText("Lives: " + game["lives"], 305, 30);
-					
-					//level
-					ctx.rect(600, 0, 300, 50);
-					ctx.font = "30px Arial";
-					ctx.fillStyle = "black";
-					ctx.fillText("Level: " + game["level"], 605, 30);
-					
-					
-					ctx.stroke();
-					
-					
-					
-					
+
 					//draw player
 					ctx.beginPath();
 					let imgP = new Image();
@@ -185,6 +190,29 @@
 						game["score"] += 10;
 					}
 					
+					//draw score/lives/level
+					ctx.beginPath();
+					//score
+					ctx.rect(0,0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Score: " + game["score"], 5, 30);
+					
+					//lives
+					ctx.rect(300, 0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Lives: " + game["lives"], 305, 30);
+					
+					//level
+					ctx.rect(600, 0, 300, 50);
+					ctx.font = "30px Arial";
+					ctx.fillStyle = "black";
+					ctx.fillText("Level: " + game["level"], 605, 30);
+					
+					ctx.stroke();
+					
+					
 					
 					//repeat
 					if(game["lives"] > 0){
@@ -195,16 +223,27 @@
 						ctx.beginPath();
 						ctx.fillStyle = "red";
 						ctx.fillRect(100, 100, 700, 400);
+						ctx.font = "100px Arial";
+						ctx.fillStyle = "black";
+						ctx.fillText("GAME OVER", 150, 325);
 						ctx.stroke();
 						
 					}
 					
-					
-					//window.requestAnimationFrame(draw);
 				}
 
-
-				draw();
+				
+				ctx.beginPath();
+				ctx.fillStyle = "black";
+				ctx.fillRect(100, 100, 700, 400);
+				ctx.font = "100px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("START", 290, 325);
+				ctx.font = "30px Arial";
+				ctx.fillText("click on the screen to start", 275, 350);
+				ctx.stroke();
+				
+				document.addEventListener('click', draw);
 			</script>
 	</body>
 </html>
